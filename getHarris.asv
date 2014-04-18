@@ -1,0 +1,25 @@
+% this function call the harris function and compute the harris corners as
+% well as the p_correct.
+% the inputs are: image matrix, p_approx
+% the outputs are: H_new, harris image and grid points image
+function result = getHarris(im, p_approx)
+% set some parameters
+sigma = 2;
+thresh = 500;
+radius = 2;
+
+% handle image
+[cim,r,c,rsubp,csubp] = harris(rgb2gray(im1),sigma,thresh,radius,1);
+p1_harris = [csubp,rsubp];
+Dist = dist2(p_approx1(1:2,:)',p_harris);
+[D_sorted, D_index] = sort(Dist,2);
+p1_correct = p1_harris(D_index(:,1),:);
+% show the image
+figure();
+imshow(im1);
+hold on    
+plot(p1_correct(:,1),p1_correct(:,2),'r+');
+hold off
+p1_correct_homo = [p1_correct,ones(80,1)];
+H1_new = homography2d(Corners',p1_correct_homo');
+end

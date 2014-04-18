@@ -1,0 +1,7 @@
+get(0,'Diary')
+
+ans =
+
+on
+
+diary off
