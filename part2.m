@@ -170,8 +170,20 @@ plot(p_approx4(1,:),p_approx4(2,:),'o');
 hold off;
 
 % now use getHarris function to get new H matrix and images
-H1_new = getHarris(im1, p_approx1);
-H2_new = getHarris(im, p_approx2);
-H3_new = getHarris(im, p_approx3);
-H4_new = getHarris(im, p_approx4);
+[H1_new p1_correct] = getHarris(im1, p_approx1, Corners);
+[H2_new p2_correct] = getHarris(im2, p_approx2, Corners);
+[H3_new p3_correct] = getHarris(im3, p_approx3, Corners);
+[H4_new p4_correct] = getHarris(im4, p_approx4, Corners);
+
+% now use getKRt function to calculate the new K and new R,t for each image
+[new_K,new_R1,new_R2,new_R3,new_t1,new_t2,new_t3] = getKRt(H1_new,H2_new,H3_new,H4_new);
+
+% calculate reprojection errors and its previous result without improvement
+[err_reprojection_old1 err_reprojection_new1] = getError(H1_new, Corners, p_approx1, p1_correct);
+
+[err_reprojection_old2 err_reprojection_new2] = getError(H2_new, Corners, p_approx2, p2_correct);
+
+[err_reprojection_old3 err_reprojection_new3] = getError(H3_new, Corners, p_approx3, p3_correct);
+
+[err_reprojection_old4 err_reprojection_new4] = getError(H4_new, Corners, p_approx4, p4_correct);
 

@@ -2,24 +2,32 @@
 % well as the p_correct.
 % the inputs are: image matrix, p_approx
 % the outputs are: H_new, harris image and grid points image
-function result = getHarris(im, p_approx)
+function [H_new p_correct] = getHarris(im, p_approx, Corners)
 % set some parameters
 sigma = 2;
 thresh = 500;
 radius = 2;
 
-% handle image
-[cim,r,c,rsubp,csubp] = harris(rgb2gray(im1),sigma,thresh,radius,1);
-p1_harris = [csubp,rsubp];
-Dist = dist2(p_approx1(1:2,:)',p_harris);
+% handle image, call harris function
+[cim,r,c,rsubp,csubp] = harris(rgb2gray(im),sigma,thresh,radius,1);
+p_harris = [csubp,rsubp];
+figure();
+imshow(im);
+title('Harris corners');
+hold on
+plot(p_harris(:,1),p_harris(:,2),'b+');
+hold off
+Dist = dist2(p_approx(1:2,:)',p_harris);
 [D_sorted, D_index] = sort(Dist,2);
-p1_correct = p1_harris(D_index(:,1),:);
+p_correct = p_harris(D_index(:,1),:);
 % show the image
 figure();
-imshow(im1);
+imshow(im);
+title('grid points');
 hold on    
-plot(p1_correct(:,1),p1_correct(:,2),'r+');
+plot(p_correct(:,1),p_correct(:,2),'r+');
 hold off
-p1_correct_homo = [p1_correct,ones(80,1)];
-H1_new = homography2d(Corners',p1_correct_homo');
+p_correct_homo = [p_correct,ones(80,1)];
+size(p_correct_homo)
+H_new = homography2d(Corners,p_correct_homo');
 end

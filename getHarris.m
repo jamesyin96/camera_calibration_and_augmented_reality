@@ -2,7 +2,7 @@
 % well as the p_correct.
 % the inputs are: image matrix, p_approx
 % the outputs are: H_new, harris image and grid points image
-function H_new = getHarris(im, p_approx)
+function [H_new p_correct] = getHarris(im, p_approx, Corners)
 % set some parameters
 sigma = 2;
 thresh = 500;
@@ -25,8 +25,8 @@ figure();
 imshow(im);
 title('grid points');
 hold on    
-plot(p_correct(:,1),p_correct(:,2),'r+');
+plot(p_correct(:,1),p_correct(:,2),'r*');
 hold off
 p_correct_homo = [p_correct,ones(80,1)];
-H_new = homography2d(Corners',p_correct_homo');
+H_new = homography2d(Corners,p_correct_homo');
 end

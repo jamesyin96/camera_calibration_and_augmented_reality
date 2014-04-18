@@ -1,5 +1,5 @@
 % this function can get the K,R and t from H matrix
-function result = getKRt()
+function [K,R1,R2,R3,t1,t2,t3] = getKRt(H1,H2,H3,H4)
 
 % Now compute the intrinsic and extrinsic parameters
 V1 = getV(H1);
@@ -32,7 +32,7 @@ u0 = gamma*v0/alpha - B(1,3)*alpha^2/lambda;
 %    0     beta  v0
 %    0     0     1]
 A = [alpha gamma u0; 0 beta v0; 0 0 1];
-
+K = A*A';
 % now compute extrinsic parameters R = [r1 r2 r3] and t
 % for each image H1,H2,H3,H4, compute the extrinsic parameters
 [R1 t1] = getExtrinsic(H1,A);
@@ -40,36 +40,4 @@ A = [alpha gamma u0; 0 beta v0; 0 0 1];
 [R3 t3] = getExtrinsic(H3,A);
 [R4 t4] = getExtrinsic(H4,A);
 
-% output R and t
-R1 = R1
-t1 = t1
-R2 = R2
-t2 = t2
-R3 = R3
-t3 = t3
-R4 = R4
-t4 = t4
-
-% compute and output R'R
-RTR1 = R1'*R1
-RTR2 = R2'*R2
-RTR3 = R3'*R3
-RTR4 = R4'*R4
-
-% calculate and output new R and R'R
-[U1,Sigma1,V1] = svd(R1);
-new_R1 = U1 * V1'
-newRTR1 = new_R1' * new_R1
-
-[U2,Sigma2,V2] = svd(R2);
-new_R2 = U2 * V2'
-newRTR2 = new_R2' * new_R2
-
-[U3,Sigma3,V3] = svd(R3);
-new_R3 = U3 * V3'
-newRTR3 = new_R3' * new_R3
-
-[U4,Sigma4,V4] = svd(R4);
-new_R4 = U4 * V4'
-newRTR4 = new_R4' * new_R4
 end

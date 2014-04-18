@@ -169,52 +169,18 @@ hold on
 plot(p_approx4(1,:),p_approx4(2,:),'o');
 hold off;
 
-% now use getHarris function to d
-H1_new = getHarris(im1, p_approx1);
+% now use getHarris function to get new H matrix and images
+[H1_new p1_correct] = getHarris(im1, p_approx1)
+[H2_new p2_correct] = getHarris(im, p_approx2)
+[H3_new p3_correct] = getHarris(im, p_approx3)
+[H4_new p4_correct] = getHarris(im, p_approx4)
 
-% handle image2
-[cim,r,c,rsubp,csubp] = harris(rgb2gray(im2),sigma,thresh,radius,1);
-p2_harris = [csubp,rsubp];
-Dist = dist2(p_approx2(1:2,:)',p2_harris);
-[D_sorted, D_index] = sort(Dist,2);
-p2_correct = p2_harris(D_index(:,1),:);
-% show the image
-figure();
-imshow(im2);
-hold on    
-plot(p2_correct(:,1),p2_correct(:,2),'r+');
-hold off
-p2_correct_homo = [p2_correct,ones(80,1)];
-H2_new = homography2d(Corners',p2_correct_homo');
+% now use getKRt function to calculate the new K and new R,t for each image
+[new_K,new_R1,new_R2,new_R3,new_t1,new_t2,new_t3] = getKRt(H1_new,H2_new,H3_new,H4_new);
 
-% handle image3
-[cim,r,c,rsubp,csubp] = harris(rgb2gray(im3),sigma,thresh,radius,1);
-p3_harris = [csubp,rsubp];
-Dist = dist2(p_approx3(1:2,:)',p_harris3);
-[D_sorted, D_index] = sort(Dist,2);
-p3_correct = p3_harris(D_index(:,1),:);
-% show the image
-figure();
-imshow(im3);
-hold on    
-plot(p3_correct(:,1),p_correct3(:,2),'r+');
-hold off
-p3_correct_homo = [p3_correct,ones(80,1)];
-H3_new = homography2d(Corners',p3_correct_homo');
+% calculate reprojection errors and its previous result without improvement
+[err_reprojection_old1 err_reprojection_new1] = getError(H1_new, Corners, p_approx1, p1_correct);
 
-% handle image4
-[cim,r,c,rsubp,csubp] = harris(rgb2gray(im4),sigma,thresh,radius,1);
-p4_harris = [csubp,rsubp];
-Dist = dist2(p_approx4(1:2,:)',p_harris4);
-[D_sorted, D_index] = sort(Dist,2);
-p4_correct = p4_harris(D_index(:,1),:);
-% show the image
-figure();
-imshow(im4);
-title('');
-hold on    
-plot(p4_correct(:,1),p4_correct(:,2),'r+');
-hold off
-p4_correct_homo = [p4_correct,ones(80,1)];
-H4_new = homography2d(Corners',p4_correct_homo');
+[err_reprojection_old2 err_reprojection_new2] = getError(H2_new, Corners, p_approx2, p2_correct);
 
+[err_reprojection_old2 err_reprojection_new3] = getError(H3_new, Corners, p_approx3, p3_correct);
